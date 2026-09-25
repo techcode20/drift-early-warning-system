@@ -1,0 +1,5 @@
+body{font-family:system-ui;background:#05070c;color:#f2f5f9;padding:20px}
+#banner{background:#e2001a;padding:8px 16px;border-radius:20px;margin-left:12px}
+.hidden{display:none}
+button{background:#1c69d4;color:#fff;border:0;border-radius:20px;padding:10px 18px;margin:4px;cursor:pointer}
+#chart{background:#0b1018;border:1px solid #ffffff18;border-radius:12px;margin-top:12px}

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Drift Guard — Live Health</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script></head>
+<body>
+<h1>Concept-Drift Early Warning <span id="banner" class="hidden">DRIFT DETECTED — <span id="feat"></span></span></h1>
+<div>
+  <button onclick="feed('normal')">Feed Normal</button>
+  <button onclick="feed('gradual')">Feed Gradual</button>
+  <button onclick="feed('spike')">Feed Spike</button>
+  <button onclick="draw()">Refresh</button>
+</div>
+<svg id="chart" width="900" height="300"></svg>
+<div id="bars"></div>
+<script src="app.js"></script>
+</body></html>

@@ -1,0 +1,30 @@
+{
+  "transaction": {
+    "type": "object",
+    "required": ["amount", "hour", "location", "merchant", "device_age"],
+    "properties": {
+      "amount": { "type": "number", "minimum": 0 },
+      "hour": { "type": "integer", "minimum": 0, "maximum": 23 },
+      "location": { "type": "string" },
+      "merchant": { "type": "string" },
+      "device_age": { "type": "number", "minimum": 0 }
+    }
+  },
+  "ingest_request": {
+    "type": "object",
+    "required": ["transactions"],
+    "properties": {
+      "transactions": { "type": "array", "minItems": 1 }
+    }
+  },
+  "ingest_response": {
+    "type": "object",
+    "required": ["psi_global", "severity", "top_feature"],
+    "properties": {
+      "psi_global": { "type": "number" },
+      "severity": { "type": "string", "enum": ["none", "mild", "moderate", "severe", "no-decision"] },
+      "top_feature": { "type": "string" }
+    }
+  },
+  "columns": ["amount", "hour", "location", "merchant", "device_age"]
+}
