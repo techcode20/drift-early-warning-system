@@ -1,8 +1,5 @@
 async function feed(scenario) {
-  // generate 800 rows client-side? No — ask backend to simulate via ingest of synthetic batch.
-  // Simplest demo: call a helper endpoint pattern — here we POST random batch built in python via /ingest.
-  // For starter: frontend just triggers refresh; real feeding done by Role 1 script.
-  // TODO(Role1+3): add POST /simulate/{scenario} to auto-generate + ingest.
+  await fetch(`/simulate/${scenario}`, {method: 'POST'});
   await draw();
 }
 async function draw() {

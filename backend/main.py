@@ -27,15 +27,11 @@ def load_baseline(n: int = 10000):
     return {"rows": len(BASELINE), "status": "baseline-set"}
 
 
-@app.post("/ingest")
-def ingest(body: Ingest):
-    if BASELINE is None:
-        return {"error": "call POST /baseline/load first"}
-    batch = pd.DataFrame(body.transactions)
+def _store_and_respond(batch: pd.DataFrame, scenario: str) -> dict:
     r = compare(BASELINE, batch)
     c = conn()
     cur = c.cursor()
-    cur.execute("INSERT INTO batches(n, scenario) VALUES(?,?)", (len(batch), body.scenario))
+    cur.execute("INSERT INTO batches(n, scenario) VALUES(?,?)", (len(batch), scenario))
     bid = cur.lastrowid
     cur.execute("INSERT INTO drift_scores VALUES(?,?,?,?)",
                 (bid, r["psi_global"], r["severity"], r.get("top_feature", "")))
@@ -49,6 +45,24 @@ def ingest(body: Ingest):
     c.commit()
     c.close()
     return {**r, "action": action, "batch_id": bid}
+
+
+@app.post("/ingest")
+def ingest(body: Ingest):
+    if BASELINE is None:
+        return {"error": "call POST /baseline/load first"}
+    return _store_and_respond(pd.DataFrame(body.transactions), body.scenario)
+
+
+@app.post("/simulate/{scenario}")
+def simulate(scenario: str, n: int = 800, seed: int | None = None):
+    """One-click demo feed: generate a synthetic batch and ingest it."""
+    if BASELINE is None:
+        return {"error": "call POST /baseline/load first"}
+    if scenario not in ("normal", "gradual", "spike"):
+        return {"error": "scenario must be normal|gradual|spike"}
+    from simulation.fraud_gen import get_batch
+    return _store_and_respond(get_batch(n, scenario, seed), scenario)
 
 
 @app.get("/scores")
