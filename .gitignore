@@ -3,5 +3,8 @@ __pycache__/
 *.pyc
 *.db
 *.csv
+retrain_trigger.json
 .ipynb_checkpoints/
 .vscode/
+.pytest_cache/
+practice/

@@ -1,6 +1,20 @@
 # AGENTS.md
 
-> State as of 2026-09-24: greenfield — working directory is empty. No `README`, manifests, lockfiles, source, tests, CI, or `opencode.json` exist yet. Do not assume a stack. When one is added, replace this stub with exact commands and entrypoints.
+> Stack: Python 3.12 + FastAPI + SQLite + scipy + D3.js. Repo: techcode20/drift-early-warning-system.
+
+## Commands (run from repo root, `python -m` form — bare `uvicorn`/`pytest` may miss PATH)
+
+- Install: `python -m pip install -r requirements.txt`
+- Tests: `python -m pytest detector backend -q` (must stay green; CI runs same)
+- API: `python -m uvicorn backend.main:app --reload` → dashboard `/`, docs `/docs`
+- E2E demo: `POST /reset` → feed `/simulate/normal|gradual|spike` → check `GET /scores`
+
+## Boundaries
+
+- `DRIFT_DB` env overrides SQLite path — tests use temp DB; never commit `*.db`, `*.csv`, `retrain_trigger.json` (gitignored).
+- Thresholds live ONLY in `shared/config.py`; detector stays pure (no DB/API imports).
+- Commit/push only when explicitly asked. Keep `practice/`-style scratch outside the repo.
+
 
 ## Shell (verified env: `win32`, PowerShell 5.1)
 
