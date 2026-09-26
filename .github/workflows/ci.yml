@@ -13,4 +13,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python -m pytest detector backend -q
+      - run: python -m pytest detector backend simulation -q

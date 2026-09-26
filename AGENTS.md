@@ -5,7 +5,7 @@
 ## Commands (run from repo root, `python -m` form — bare `uvicorn`/`pytest` may miss PATH)
 
 - Install: `python -m pip install -r requirements.txt`
-- Tests: `python -m pytest detector backend -q` (must stay green; CI runs same)
+- Tests: `python -m pytest detector backend simulation -q` (must stay green; CI runs same)
 - API: `python -m uvicorn backend.main:app --reload` → dashboard `/`, docs `/docs`
 - E2E demo: `POST /reset` → feed `/simulate/normal|gradual|spike` → check `GET /scores`
 

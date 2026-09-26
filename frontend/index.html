@@ -40,6 +40,13 @@
 <h2>Health line <small>global PSI over time · orange = mild (0.1) · red = severe (0.25)</small></h2>
 <svg id="chart" viewBox="0 0 900 320" preserveAspectRatio="xMidYMid meet"></svg>
 
+<h2>Model damage <small>accuracy (green) vs true fraud rate (red) — labels available in demo; delayed in real life</small></h2>
+<svg id="chart2" viewBox="0 0 900 260" preserveAspectRatio="xMidYMid meet"></svg>
+
+<h2>Mugshot vs lineup <small>baseline vs latest batch —
+<select id="featSel" aria-label="Feature to compare"></select></small></h2>
+<div id="overlay"></div>
+
 <h2>Per-feature blame <small>PSI of latest batch — longest bar caused it</small></h2>
 <div id="bars"></div>
 

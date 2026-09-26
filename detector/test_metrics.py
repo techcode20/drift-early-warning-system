@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from detector.drift_engine import compare, confirmed, severity_of
+from detector.drift_engine import compare, compare_outputs, confirmed, severity_of
 from detector.metrics import kl, ks, psi, psi_categorical
 from simulation.fraud_gen import get_batch
 
@@ -79,3 +79,18 @@ def test_confirmed_rule():
     assert confirmed(["mild", "moderate"]) is False
     assert confirmed(["moderate", "severe"]) is True
     assert confirmed(["severe"]) is False
+
+
+def test_compare_outputs_confidence_drift(base):
+    # Honest finding: when the model is confidently WRONG (spike), its
+    # confidence histogram barely moves — psi_conf stays small. What catches
+    # concept drift is accuracy + true-vs-predicted fraud rate (see
+    # simulation/test_model.py), not confidence shape. We assert the
+    # function runs and returns well-formed scores.
+    from simulation.model import score_batch, train
+    model, cols, out = train(base)
+    moved = score_batch(model, cols, get_batch(800, "spike", seed=12))
+    r_moved = compare_outputs(out["conf"], moved["conf"])
+    assert set(r_moved) == {"psi_conf", "ks_D", "ks_p"}
+    assert r_moved["psi_conf"] >= 0.0
+    assert moved["acc"] < out["acc"] - 0.2  # the signal that actually fires

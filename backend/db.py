@@ -30,6 +30,22 @@ CREATE TABLE IF NOT EXISTS feature_scores(
     PRIMARY KEY (batch_id, feature)
 );
 CREATE INDEX IF NOT EXISTS idx_batches_id ON batches(id);
+CREATE TABLE IF NOT EXISTS output_scores(
+    batch_id INTEGER PRIMARY KEY REFERENCES batches(id) ON DELETE CASCADE,
+    pred_fraud_rate REAL,
+    true_fraud_rate REAL,
+    acc REAL,
+    psi_conf REAL
+);
+CREATE TABLE IF NOT EXISTS histograms(
+    batch_id INTEGER REFERENCES batches(id) ON DELETE CASCADE,
+    feature TEXT NOT NULL,
+    kind TEXT NOT NULL,             -- 'numeric' (edges+counts) or 'categorical' (labels+shares)
+    edges_json TEXT NOT NULL DEFAULT '[]',
+    counts_json TEXT NOT NULL,      -- counts for numeric, shares for categorical
+    n INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (batch_id, feature)
+);
 """
 
 

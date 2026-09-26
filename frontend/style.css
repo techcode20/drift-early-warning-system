@@ -23,7 +23,14 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--tex
 #msg{color:var(--muted);font-size:.85rem}
 #empty{background:var(--panel);border:1px dashed var(--line);border-radius:12px;padding:14px;color:var(--muted)}
 h2{margin:22px 0 8px;font-size:1.05rem}h2 small{color:var(--muted);font-weight:400}
-#chart{width:100%;height:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+#chart,#chart2{width:100%;height:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+#overlay{display:grid;gap:4px;font-size:.8rem}
+.orow{display:grid;grid-template-columns:150px 1fr;gap:8px;align-items:center}
+.olab{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.obars{display:grid;gap:2px}
+.obar{height:9px;border-radius:4px;min-width:2px}
+select{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:4px 8px}
+footer{margin-top:26px;color:var(--muted);font-size:.8rem;border-top:1px solid var(--line);padding-top:10px}
 #bars{display:grid;gap:6px}
 .brow{display:grid;grid-template-columns:130px 1fr 60px;gap:8px;align-items:center;font-size:.85rem}
 .btrack{background:#ffffff12;border-radius:6px;height:14px;overflow:hidden}

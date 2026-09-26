@@ -73,3 +73,12 @@ def confirmed(severities: list[str], need: int = 2) -> bool:
     """
     tail = severities[-need:]
     return len(tail) == need and all(s in ALERT_SEVERITIES for s in tail)
+
+
+def compare_outputs(base_conf: pd.Series, batch_conf: pd.Series) -> dict:
+    """Output-side drift: does the model's confidence distribution still look
+    like deployment day? Returns {psi_conf, ks_D, ks_p}."""
+    v = psi(base_conf, batch_conf)
+    d, p = ks(base_conf, batch_conf)
+    return {"psi_conf": round(float(v), 4), "ks_D": round(float(d), 4),
+            "ks_p": round(float(p), 5)}

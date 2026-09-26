@@ -77,3 +77,37 @@ def test_reset_restarts_numbering(client):
     client.post("/reset")
     r = client.post("/simulate/normal", params={"n": 800, "seed": 1}).json()
     assert r["batch_id"] == 1
+
+
+def test_outputs_track_accuracy_decay(client):
+    n = client.post("/simulate/normal", params={"n": 800, "seed": 21}).json()["outputs"]
+    s = client.post("/simulate/spike", params={"n": 800, "seed": 22}).json()["outputs"]
+    assert n["acc"] > 0.8, n
+    assert s["acc"] < n["acc"] - 0.2, (n, s)  # concept drift: model goes blind
+    assert s["true_fraud_rate"] > s["pred_fraud_rate"], s
+    assert {"psi_conf", "mean_conf", "acc_drop"} <= set(s)
+
+
+def test_scores_include_outputs(client):
+    client.post("/simulate/normal", params={"n": 800, "seed": 31})
+    body = client.get("/scores").json()
+    assert body["baseline_acc"] > 0.8
+    assert len(body["outputs"]) == 1 and body["outputs"][0]["acc"] is not None
+
+
+def test_distributions_overlay(client):
+    client.post("/simulate/spike", params={"n": 800, "seed": 41})
+    d = client.get("/distributions", params={"feature": "location"}).json()
+    assert d["kind"] == "categorical" and d["latest"] is not None
+    assert abs(sum(d["latest"]["values"]) - 1.0) < 0.01
+    n = client.get("/distributions", params={"feature": "amount"}).json()
+    assert n["kind"] == "numeric" and len(n["axis"]) == len(n["baseline"]["values"]) + 1
+    assert client.get("/distributions", params={"feature": "nope"}).status_code == 400
+
+
+def test_alerts_lists_confirmed(client):
+    assert client.get("/alerts").json()["alerts"] == []
+    client.post("/simulate/spike", params={"n": 800, "seed": 51})
+    client.post("/simulate/spike", params={"n": 800, "seed": 52})
+    alerts = client.get("/alerts").json()["alerts"]
+    assert len(alerts) == 2 and all(a["severity"] == "severe" for a in alerts)
